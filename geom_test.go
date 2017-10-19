@@ -358,3 +358,23 @@ func TestMinMaxdist(t *testing.T) {
 		t.Errorf("Expected %v.minMaxDist(%v) == %v, got %v", p, r, expected, d)
 	}
 }
+
+func TestNewRectFromPoints(t *testing.T) {
+	tol := 0.01
+	p1 := &Point{1, 1, -1}
+	p2 := &Point{2, 1, -1.5}
+	p3 := &Point{3, 2, 1}
+	p4 := &Point{2, 3, 2.5}
+	p5 := &Point{1, 2, 0}
+	points := []*Point{p1, p2, p3, p4, p5}
+
+	rect := NewRectFromPoints(points, tol)
+
+	exp1 := Point{0.99, 0.99, -1.51}
+	exp2 := Point{3.01, 3.01, 2.51}
+	d1 := exp1.dist(rect.p)
+	d2 := exp2.dist(rect.q)
+	if d1 > EPS || d2 > EPS {
+		t.Errorf("boundingBox != %v, %v, got %v", exp1, exp2, rect)
+	}
+}
