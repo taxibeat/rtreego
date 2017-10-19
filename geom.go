@@ -182,6 +182,16 @@ func NewRect(p Point, lengths []float64) (r *Rect, err error) {
 	return
 }
 
+// NewRectFromPoints constructs and returns a pointer to a Rect given a slice of points
+func NewRectFromPoints(points []*Point, tol float64) (r *Rect) {
+	rects := make([]*Rect, len(points))
+	for i, point := range points {
+		rects[i] = point.ToRect(tol)
+	}
+
+	return boundingBoxN(rects...)
+}
+
 // size computes the measure of a rectangle (the product of its side lengths).
 func (r *Rect) size() float64 {
 	size := 1.0
