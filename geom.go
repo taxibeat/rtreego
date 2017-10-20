@@ -182,6 +182,38 @@ func NewRect(p Point, lengths []float64) (r *Rect, err error) {
 	return
 }
 
+// NewRectFromPoints constructs and returns a pointer to a Rect given a slice of points
+func NewRectFromPoints(points []Point) (r *Rect) {
+
+	bb := new(Rect)
+	if len(points) == 1 {
+		panic(fmt.Errorf("Failed to create rect from single point"))
+	}
+
+	dim := len(points[0])
+
+	bb.p = make([]float64, dim)
+	bb.q = make([]float64, dim)
+	for i := 0; i < dim; i++ {
+		bb.p[i], bb.q[i] = points[0][i], points[0][i]
+	}
+
+	for _, point := range points {
+		if len(point) != dim {
+			panic(DimError{dim, len(points)})
+		}
+		for i := 0; i < dim; i++ {
+			if point[i] < bb.p[i] {
+				bb.p[i] = point[i]
+			}
+			if point[i] > bb.q[i] {
+				bb.q[i] = point[i]
+			}
+		}
+	}
+	return bb
+}
+
 // size computes the measure of a rectangle (the product of its side lengths).
 func (r *Rect) size() float64 {
 	size := 1.0
